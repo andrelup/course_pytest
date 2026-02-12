@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 
+from src.settings.environment import EnvironmentSettings
+
 router = APIRouter()
 
 @router.get("/healthcheck")
@@ -8,5 +10,5 @@ async def healthcheck():
 
 @router.get("/environment")
 async def environment():
-    return {"environment": "local"}
+    return {"environment": EnvironmentSettings.ENVIRONMENT}
 
