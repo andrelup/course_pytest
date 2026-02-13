@@ -15,4 +15,4 @@ class BaseProductModel(SQLModel):
     price: float
 
 class ProductModel(BaseProductModel, BaseModel, table=True):
-    pass
+    __tablename__ = "products"
