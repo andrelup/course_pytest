@@ -2,6 +2,7 @@ from  fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.async_session import get_session
 from src.models.product import BaseProductModel, OptionalProductModel, ProductModel
+from src.services.product import ProductService
 
 
 router = APIRouter(prefix="/products", tags=["products"])
@@ -12,9 +13,9 @@ async def get_product_by_id(id: int, session: AsyncSession = Depends(get_session
     return {"id": id, "name": "Producto de ejemplo"}
 
 @router.post("/", response_model=ProductModel)
-async def create_new_product(payload: BaseProductModel, session: AsyncSession = Depends(get_session)):
+async def create_new_product(payload: BaseProductModel, session: AsyncSession = Depends(get_session), product_service = Depends(ProductService)):
     # Aquí iría la lógica para crear un nuevo producto en la base de datos usando el session
-    return {"id": 1, "name": payload.name}
+    return await product_service.create(session, name=payload.name, price=payload.price)
 
 @router.patch("/{id}", response_model=ProductModel)
 async def modify_partial(id: int, payload: OptionalProductModel, session: AsyncSession = Depends(get_session)):
