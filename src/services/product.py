@@ -19,5 +19,24 @@ class ProductService:
         except Exception as e:
             await session.rollback()
             raise e
-        # Aquí iría la lógica para crear un nuevo producto en la base de datos usando el session
+        return instance
+    
+    async def modify(self, session, id: int, **fields) -> ProductModel:
+        instance = await self.get_by_id(session, id)
+        if not instance:
+            return False
+        for field, value in fields.items():
+            setattr(instance, field, value)
+
+        await session.commit()
+        await session.refresh(instance)
+        return instance
+    
+    async def delete(self, session, id: int) -> ProductModel:
+        instance = await self.get_by_id(session, id)
+        if not instance:
+            return False
+        
+        session.delete(instance)
+        await session.commit()
         return instance
