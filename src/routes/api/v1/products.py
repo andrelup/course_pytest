@@ -1,4 +1,4 @@
-from  fastapi import APIRouter, Depends, Response
+from  fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.async_session import get_session
 from src.models.product import BaseProductModel, OptionalProductModel, ProductModel
@@ -8,9 +8,11 @@ from src.services.product import ProductService
 router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("/{id}", response_model=ProductModel)
-async def get_product_by_id(id: int, session: AsyncSession = Depends(get_session)):
-    # Aquí iría la lógica para obtener el producto de la base de datos usando el session
-    return {"id": id, "name": "Producto de ejemplo"}
+async def get_product_by_id(id: int, session: AsyncSession = Depends(get_session), product_service = Depends(ProductService)):
+    instance = await product_service.get_by_id(session, id)
+    if not instance:
+        raise HTTPException(status_code=404, detail=f"Product with ID {id} not found")
+    return instance
 
 @router.post("/", response_model=ProductModel)
 async def create_new_product(payload: BaseProductModel, session: AsyncSession = Depends(get_session), product_service = Depends(ProductService)):
