@@ -1,1 +1,4 @@
-pytest_plugins = ["tests.fixtures.app" ]
+pytest_plugins = [
+    "tests.fixtures.app",
+    "tests.fixtures.event_loop"
+]
