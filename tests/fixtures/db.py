@@ -36,3 +36,5 @@ async def async_session_on_memory(async_engine_on_memory):
         yield async_session
     
     app.dependency_overrides[get_session] = override_get_session
+    yield async_session
+    await async_session.close()
