@@ -2,11 +2,12 @@ from fastapi import status
 
 URL_PRODUCTOS = "/v1/products/"
 
-async def test_create_product_successful(async_client):
-    payload = {"name": "Prueba", "price": 200}
-    response = await async_client.post(URL_PRODUCTOS, json=payload)
-    assert (response.status_code == status.HTTP_201_CREATED and
-            response.json()["name"] == payload["name"] and
+class TestCrudProduct:
+    async def test_create_product_successful(self, async_client, async_session_on_memory):
+        payload = {"name": "Prueba", "price": 200}
+        response = await async_client.post(URL_PRODUCTOS, json=payload)
+        assert (response.status_code == status.HTTP_201_CREATED and
+                response.json()["name"] == payload["name"] and
             response.json()["price"] == payload["price"])
 
 # async def test_get_product(async_client):
