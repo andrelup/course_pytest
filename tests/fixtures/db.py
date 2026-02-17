@@ -3,6 +3,8 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
+
+
 from src.main import app
 from src.db.async_session import get_session
 
@@ -23,14 +25,14 @@ async def async_engine_on_memory():
 async def async_session_on_memory(async_engine_on_memory):
     session_factory = sessionmaker(
             bind=async_engine_on_memory, 
-            class_=AsyncSession, expire_on_commit=False,
+            class_=AsyncSession, 
+            expire_on_commit=False,
             autocommit=False,
             autoflush=False
         )
-    async_session =session_factory()
+    async_session = session_factory()
 
     async def override_get_session():
         yield async_session
     
     app.dependency_overrides[get_session] = override_get_session
-    yield async_session
