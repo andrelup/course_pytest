@@ -37,6 +37,6 @@ class ProductService:
         if not instance:
             return False
         
-        session.delete(instance)
+        await session.delete(instance)
         await session.commit()
         return instance

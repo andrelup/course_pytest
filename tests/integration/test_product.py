@@ -12,7 +12,6 @@ class TestCrudProduct:
         assert (response.status_code == status.HTTP_201_CREATED and
                 response.json()["name"] == payload["name"] and
             response.json()["price"] == payload["price"])
-        
         response = await async_client.delete(f"{URL_PRODUCTOS}{response.json()['id']}")
         assert response.status_code == status.HTTP_200_OK
 
@@ -55,3 +54,6 @@ class TestCrudProduct:
                 response.json()["price"] == payload.get("price", fake_product.price)
         )
 
+    async def test_get_product_not_found(self, async_client):
+        response = await async_client.get(f"{URL_PRODUCTOS}1")
+        assert response.status_code == status.HTTP_404_NOT_FOUND

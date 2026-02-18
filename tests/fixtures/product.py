@@ -11,3 +11,4 @@ async def fake_product(async_session_on_memory):
     await async_session_on_memory.refresh(product)
     yield product
     await async_session_on_memory.delete(product)
+    await async_session_on_memory.commit()
